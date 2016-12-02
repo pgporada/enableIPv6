@@ -24,51 +24,51 @@ for region in "${REGIONLIST[@]}"; do
   VPCLIST=()
 
   echo "===="
-  echo "Checking $region for VPC IDs."
+  echo "Checking ${REGION} for VPC IDs."
 
-  for vpcid in `aws ec2 describe-vpcs --output json --region $region | grep -ohE "\w*vpc-[a-z0-9]{8}"`; do
-    VPCLIST+=("$vpcid")
-    echo "$region: $vpcid"
+  for vpcid in `aws ec2 describe-vpcs --output json --region ${REGION} | grep -ohE "\w*vpc-[a-zA-Z0-9]{8}"`; do
+    VPCLIST+=("${VPCID}")
+    echo "${REGION}: ${VPCID}"
   done
 
   echo ""
 
   for vpcid in "${VPCLIST[@]}"; do
-    echo "[Enabling IPv6 on $vpcid]"
+    echo "[Enabling IPv6 on ${VPCID}]"
 
-    echo "Associating IPv6 CIDR Block to $vpcid."
-    aws ec2 associate-vpc-cidr-block --output json --region $region --vpc-id $vpcid --amazon-provided-ipv6-cidr-block
+    echo "Associating IPv6 CIDR Block to ${VPCID}."
+    aws ec2 associate-vpc-cidr-block --output json --region ${REGION} --vpc-id ${VPCID} --amazon-provided-ipv6-cidr-block
 
-    TARGETIGW=$(aws ec2 describe-internet-gateways --output json --region $region | grep -B 10 "$vpcid" | grep -oh "\w*igw-\w*")
+    TARGETIGW=$(aws ec2 describe-internet-gateways --output json --region ${REGION} | grep -B 10 "${VPCID}" | grep -oh "\w*igw-\w*")
 
     # One IGW per VPC, but many possible Route Tables per VPC.
-    for routetable in `aws ec2 describe-route-tables --output json --region $region | grep -B 1 "$vpcid" | grep -oh "\w*rtb-\w*"`; do
-      echo "Updating $routetable with IPv6 default route to $TARGETIGW."
-      aws ec2 create-route --output json --region $region --route-table-id $routetable --gateway-id $TARGETIGW --destination-ipv6-cidr-block "::/0"
+    for routetable in `aws ec2 describe-route-tables --output json --region ${REGION} | grep -B 1 "${VPCID}" | grep -oh "\w*rtb-\w*"`; do
+      echo "Updating ${ROUTETABLE} with IPv6 default route to ${TARGETIGW}."
+      aws ec2 create-route --output json --region ${REGION} --route-table-id ${ROUTETABLE} --gateway-id ${TARGETIGW} --destination-ipv6-cidr-block "::/0"
     done
 
     # The following updates all Security Groups in the VPC to allow IPv6 traffic outbound. This occurs on every Security Group, so it may not fit everyone's use case. 
     # Disable if you don't want some Security Groups to allow access to the Internet for IPv6 traffic. Generally we do, so it is enabled by default.
-    for securitygroup in `aws ec2 describe-security-groups --output json --region $region | grep -A 3 "$vpcid" | grep -oh "\w*sg-\w*"`; do
-      echo "Updating $securitygroup to allow IPv6 traffic. $(aws ec2 describe-security-groups --output json --region $region --group-id "$securitygroup" | grep GroupName)"
-      aws ec2 authorize-security-group-ingress --output json --region $region --group-id $securitygroup --ip-permissions '[{"Ipv6Ranges":[{"CidrIpv6":"::/0"}], "IpProtocol":"-1"}]'
+    for securitygroup in `aws ec2 describe-security-groups --output json --region ${REGION} | grep -A 3 "${VPCID}" | grep -oh "\w*sg-\w*"`; do
+      echo "Updating ${SECURITYGROUP} to allow IPv6 traffic. $(aws ec2 describe-security-groups --output json --region ${REGION} --group-id "${SECURITYGROUP}" | grep GroupName)"
+      aws ec2 authorize-security-group-ingress --output json --region ${REGION} --group-id ${SECURITYGROUP} --ip-permissions '[{"Ipv6Ranges":[{"CidrIpv6":"::/0"}], "IpProtocol":"-1"}]'
     done
 
     # Verify that the VPC got an IPv6 assignment.
-    aws ec2 describe-vpcs --output json --region $region --vpc-id $vpcid | grep -A 8 "Ipv6CidrBlockAssociationSet"
+    aws ec2 describe-vpcs --output json --region ${REGION} --vpc-id ${VPCID} | grep -A 8 "Ipv6CidrBlockAssociationSet"
 
     echo "Remember to allocate subnets for each VPC or you won't be using any of your assigned CIDR block."
-    # aws ec2 associate-subnet-cidr-block --output json --region $region --subnet-id $TARGETSUB --ipv6-cidr-block <::/64>
-    # aws ec2 modify-subnet-attribute --output json --region $region --subnet $TARGETSUB --assign-ipv6-address-on-creation
-    # aws ec2 modify-subnet-attribute --output json --region $region --subnet $TARGETSUB --map-public-ip-on-launch
+    # aws ec2 associate-subnet-cidr-block --output json --region ${REGION} --subnet-id ${TARGETSUB} --ipv6-cidr-block <::/64>
+    # aws ec2 modify-subnet-attribute --output json --region ${REGION} --subnet ${TARGETSUB} --assign-ipv6-address-on-creation
+    # aws ec2 modify-subnet-attribute --output json --region ${REGION} --subnet ${TARGETSUB} --map-public-ip-on-launch
 
     echo ""
     echo "----"
-    echo "$region: $vpcid is now enabled for IPv6!"
+    echo "${REGION}: ${VPCID} is now enabled for IPv6!"
     echo "----"
 
   done
 
-  echo "$region Completed."
+  echo "${REGION} Completed."
   echo "===="
 done

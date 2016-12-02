@@ -15,7 +15,9 @@ Ideally I'd have this script be written using the SDK for a more clean and expan
 
 # Known Issues #
 
-As of today's launch, this script should only work in us-east-2 (Ohio), but should function when new regions are added.
+As of today's launch[1], this script should only work in us-east-2 (Ohio), but should function when new regions are added.
+
+[1] https://aws.amazon.com/blogs/aws/new-ipv6-support-for-ec2-instances-in-virtual-private-clouds/
 
 # If You Run Into Trouble #
 

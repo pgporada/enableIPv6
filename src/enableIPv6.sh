@@ -12,9 +12,9 @@
 #   may use alternate flags. Overall it should be compatible with current Linux builds.
 #
 
-# Output to both stdout and log-enableIPv6Globally.log, including errors.
-exec > >(tee -ia log-enableIPv6Globally.log)
-exec 2> >(tee -ia log-enableIPv6Globally.log >&2)
+# Output to both stdout and log-enableIPv6.log, including errors.
+exec > >(tee -ia log-enableIPv6.log)
+exec 2> >(tee -ia log-enableIPv6.log >&2)
 
 REGIONLIST=( us-east-2 ) # If when running this script you only want to enable some regions, list them here. Otherwise uncomment the line below for all regions.
 # REGIONLIST=( us-east-1 us-east-2 us-west-1 us-west-2 ap-south-1 ap-northeast-2 ap-southeast-1 ap-southeast-2 ap-northeast-1 eu-central-1 eu-west-1 sa-east-1 )

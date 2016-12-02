@@ -1,4 +1,4 @@
-# enableIPv6Globally #
+# enableIPv6 #
 
 This is a shell script built to search the user's AWS account for VPCs in each region, and enable IPv6 capabilities on each. This tool goes as far as associating an Amazon-provided IPv6 CIDR block for each VPC found, updating all Route Tables in each VPC to include a default route for IPv6 traffic to the IGW, and update Security Groups to include rules to allow IPv6 traffic. The results (successes and failures alike) are saved in the resulting log file, stored in the same directory the script is launched from.
 
@@ -10,7 +10,7 @@ Ideally I'd have this script be written using the SDK for a more clean and expan
 
 1. Configure the awscli on your workstation. Ensure you have a Bash shell available in /usr/bin/env. (You likely do.)
 2. Modify the script such that the REGIONLIST array contains all the regions you want IPv6 to be used in. The full list is included - just uncomment the appropriate line to use it.
-3. Run the src/enableIPv6Globally.sh script. 
+3. Run the src/enableIPv6.sh script. 
 
 # Known Issues #
 

@@ -2,7 +2,7 @@
 
 This is a shell script built to search the user's AWS account for VPCs in each region, and enable IPv6 capabilities on each. This tool goes as far as associating an Amazon-provided IPv6 CIDR block for each VPC found, updating all Route Tables in each VPC to include a default route for IPv6 traffic to the IGW, and update Security Groups to include rules to allow IPv6 traffic. The results (successes and failures alike) are saved in the resulting log file, stored in the same directory the script is launched from.
 
-What this script does not do is add subnets with new IPv6 address space (you must do that on your own or modify the code to do so). It does not launch new resources, just modifies existing ones.
+What this script does not do is add subnets with new IPv6 address space (you must do that on your own or modify the code to do so, since I didn't get that far just yet). It does not launch new resources, just modifies existing ones.
 
 Ideally I'd have this script be written using the SDK for a more clean and expandable tool, but this is the current build and should work for most.
 

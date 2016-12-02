@@ -1,11 +1,14 @@
 # enableIPv6 #
 
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
+
+
 This is a shell script built to search the user's AWS account for VPCs in each region, and enable IPv6 capabilities on each. This tool goes as far as associating an Amazon-provided IPv6 CIDR block for each VPC found, updating all Route Tables in each VPC to include a default route for IPv6 traffic to the IGW, and update Security Groups to include rules to allow IPv6 traffic. The results (successes and failures alike) are saved in the resulting log file, stored in the same directory the script is launched from.
 
 What this script does not do is add subnets with new IPv6 address space (you must do that on your own or modify the code to do so, since I didn't get that far just yet). It does not launch new resources, just modifies existing ones.
 
 Ideally I'd have this script be written using the SDK for a more clean and expandable tool, but this is the current build and should work for most.
-
+- - - -
 # How To Use It #
 
 1. Configure the awscli on your workstation. Ensure you have a Bash shell available in /usr/bin/env. (You likely do.)
@@ -13,12 +16,14 @@ Ideally I'd have this script be written using the SDK for a more clean and expan
 3. Run the src/enableIPv6.sh script. 
 4. When it's done, allocate IPv6 address space for your subnets in those VPCs.
 
+- - - -
 # Known Issues #
 
 As of today's launch[1], this script should only work in us-east-2 (Ohio), but should function when new regions are added.
 
 [1] https://aws.amazon.com/blogs/aws/new-ipv6-support-for-ec2-instances-in-virtual-private-clouds/
 
+- - - -
 # If You Run Into Trouble #
 
 Open an Issue. I made this for my own needs and am offering it as a best-effort sharing of knowledge to the world, and will work on issues in the same best-effort approach.

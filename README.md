@@ -11,6 +11,7 @@ Ideally I'd have this script be written using the SDK for a more clean and expan
 1. Configure the awscli on your workstation. Ensure you have a Bash shell available in /usr/bin/env. (You likely do.)
 2. Modify the script such that the REGIONLIST array contains all the regions you want IPv6 to be used in. The full list is included - just uncomment the appropriate line to use it.
 3. Run the src/enableIPv6.sh script. 
+4. When it's done, allocate IPv6 address space for your subnets in those VPCs.
 
 # Known Issues #
 
